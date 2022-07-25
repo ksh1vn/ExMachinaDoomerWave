@@ -1,6 +1,6 @@
 # Ex Machina Doomer Wave
 
-![Игнотт в Doomer Wave](https://github.com/ksh1vn/photos/blob/main/arack.jpg?raw=true)
+![Игнотт в Doomer Wave](https://github.com/ksh1vn/ExMachinaDoomerWave/blob/screenshot/arack.jpg?raw=true)
 
 **Doomer Wave** - мод для игры **Ex Machina**, который добавляет депрессивной атмосферы, путём ч/б эффектов на картах и **slowed+reverb** саундтрека. С данным модом желание главного героя отомстить за смерть отца и сжигание родной деревни обретает новый смысл, по крайней мере в понимании автора мода (ну т.е. меня). Данный мод никак не меняет сюжет и не добавляет новый. Сюжет остаётся **полностью оригинальным**.
 
