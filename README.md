@@ -1,5 +1,7 @@
 # Ex Machina Doomer Wave
 
+![Игнотт в Doomer Wave](https://github.com/ksh1vn/photos/blob/main/arack.jpg?raw=true)
+
 **Doomer Wave** - мод для игры **Ex Machina**, который добавляет депрессивной атмосферы, путём ч/б эффектов на картах и **slowed+reverb** саундтрека. С данным модом желание главного героя отомстить за смерть отца и сжигание родной деревни обретает новый смысл, по крайней мере в понимании автора мода (ну т.е. меня). Данный мод никак не меняет сюжет и не добавляет новый. Сюжет остаётся **полностью оригинальным**.
 
 Список изменений:
@@ -10,6 +12,6 @@
 
 Выражаю благодарность за помощь во время разработки сообществу **Deus Ex Machina**, а так-же **Carsen'у**.
 
-Титры в конце игры позаимствованы из **Improved Storyline** (https://github.com/zatinu322/ImprovedStoryline/releases/tag/v.1.0.5.3) **с разрешения автора**.
+Титры в конце игры позаимствованы из **Improved Storyline** (https://github.com/zatinu322/ImprovedStoryline) **с разрешения автора**.
 
-Скачать версию для **Community Remaster**: https://github.com/ksh1vn/ExMachinaDoomerWave/releases/tag/DWCR1.0
+Скачать версию для **Community Remaster**: https://github.com/ksh1vn/DWCR
