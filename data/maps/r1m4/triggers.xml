@@ -1,26 +1,40 @@
 <?xml version="1.0" encoding="windows-1251" standalone="yes" ?>
-<triggers><!-- **************** пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ-->
-	<trigger	Name="trAutoSave"	active="1">
-		<event eventid="GE_GAME_START" ObjName="Player1" />
-		<script>
-		</script>
-	</trigger>
+<triggers><!-- **************** старт карты, проверка условий квестов-->
 
 	<trigger	Name="GlobalVar"	active="1">
 		<event	timeout="0.1"		eventid="GE_TIME_PERIOD" />
 		<script>
 			SetVar("Boloto",0)
+			SetVar("SubMarPh",0)
+			SetVar("MainCarDead", 0)
 		    trigger:Deactivate()
 		</script>
 	</trigger>
 
 
+	<trigger	Name="trHelPlaceSecret"	active="1">
+		<event	timeout="0.1"			eventid="GE_TIME_PERIOD" />
+		<script>
+			local gunlist = {"hornet01","specter01","kord01","vector01","hurricane01","hunterSideGun"}
+			local len = getn(gunlist)
+
+			for i=1,14 do
+				--println("step"..i.."succesful")
+				CreateBoxWithAffixGun(CVector(getPos("SecretPlace"..i.."_loc")), gunlist[random(len)], random(0, 2))
+			end
+			trigger:Deactivate()
+		</script>
+	</trigger>
+
 	<trigger	Name="trStartMap"	active="1">
 		<event eventid="GE_GAME_START" ObjName="Player1" />
 		<script>
---			println("trStartMap1")
+			local submar = getObj("Subm")
+			if submar then
+				submar:Remove()
+			end
+
 			trigger:Deactivate()
-	
 		</script>
 	</trigger>
 
@@ -39,7 +53,7 @@
 	</trigger>
 
 
-<!-- ***************************** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ -->
+<!-- ***************************** Пересекание болота. Проверяется, можно или нет проехать -->
 	<trigger	Name="trMorassTeleportBefore"	active="1">
 		<event	eventid="GE_OBJECT_ENTERS_LOCATION"	ObjName="MorassRoad_loc" />
 		<script>
@@ -68,7 +82,7 @@
 			trigger:Deactivate()
 		</script>
 	</trigger>
-<!-- ***************************** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ -->
+<!-- ***************************** Пересекание болота. Проверяется, можно или нет проехать -->
 	<trigger	Name="trMorassTeleportAfter"	active="1">
 		<event	eventid="GE_OBJECT_ENTERS_LOCATION"	ObjName="MorassRoad2_loc" />
 		<script>
@@ -77,7 +91,7 @@
 			trigger:Deactivate()
 		</script>
 	</trigger>
-<!-- ***************************** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ -->
+<!-- ***************************** приехали в порт -->
 	<trigger	Name="trPortPlace"	active="1">
 		<event	eventid="GE_OBJECT_ENTERS_LOCATION"	ObjName="Port_loc" />
 		<script>
@@ -90,7 +104,7 @@
 			end
 		</script>
 	</trigger>
-<!-- *********** пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ -->
+<!-- *********** конец синематики болота -->
 	<trigger	Name="trNearMorassEnd"	active="0">
 		<event	eventid="GE_SKIP_CINEMATIC"	ObjName="Player1" />
 		<event	eventid="GE_END_CINEMATIC"	ObjName="Player1" />
@@ -109,7 +123,7 @@
 
 		</script>
 	</trigger>
-<!-- пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ -->
+<!-- Создаем отряд охраны лидера -->
 	<trigger	Name="trFreeExtremistLeader_Take" active="0">
 		<event	timeout="1"	eventid="GE_TIME_PERIOD" />
 		<script>
@@ -122,6 +136,7 @@
 				local nametr = lcar:GetName().."_Trailer"
 				local trailer = getObj(nametr)
 				if trailer then
+					trailer:SetSkin(lcar:GetSkin())
 				   local tr = getObj("trLeaderCarDie")
 				   if tr then
 				      tr:AddEvent("GE_OBJECT_DIE",nametr)
@@ -137,7 +152,7 @@
 		</script>
 	</trigger>
 
-<!-- пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-->
+<!-- едем освобождать лидера, они выдвигаются в сторону Ольма-->
 	<trigger	Name="trExtrLeader"	active="0">
 		<event	eventid="GE_OBJECT_ENTERS_LOCATION"	ObjName="LeaderCaravanStart_loc" />
 		<script>
@@ -171,7 +186,7 @@
 			end
 		</script>
 	</trigger>
-<!-- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ-->
+<!-- подъехали близко к каравану-->
 	<trigger	Name="trNearCaravanLeader"	active="0">
 		<event	eventid="GE_OBJECT_ENTERS_LOCATION"	ObjName="LeaderCaravanSpawn_loc" />
 		<script>
@@ -183,23 +198,26 @@
 		</script>
 	</trigger>
 
-<!-- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ -->
+<!-- Охрана лидера померла -->
 	<trigger Name="trLeaderCaravanDie" active="0">
 		<event eventid="GE_OBJECT_DIE" ObjName="LeaderGuardTeam" />
 		<event eventid="GE_OBJECT_DIE" ObjName="LeaderCar_vehicle_0" />
 		<script>
+			if getObj("LeaderCar_vehicle_0"):IsAlive() or GetVar("MainCarDead").AsInt==1 then
+				CompleteQuest("FreeExtremistLeader_Quest3_1")
+			else
+				CompleteQuest("FreeExtremistLeader_Quest3_2")
+				SetVar("MainCarDead", 1)
+			end
 			trigger:IncCount()
 			local count = trigger:GetCount()
 		    if 2>count then
 		    	return
 		    end
 --		    println("trLeaderCaravan DIEEEEEEEEEEEEEEEEEEEE")
-			CompleteQuestIfTaken("FreeExtremistLeader_Quest3")
-			TakeQuest("FreeExtremistLeader_Quest4")
-			TDeactivate("trLeaderCarDie")
-			if getObj("LeaderCar") then
-				getObj("LeaderCar"):Remove()
-			end
+			
+			SaveAllToleranceStatus(RS_NEUTRAL)
+
 			local Plf = GetPlayerVehicle()
 			local PlfID = GetPlayerVehicleId()
 			local PlfCoor = Plf:GetPosition()
@@ -218,20 +236,37 @@
 			AddCinematicMessage( 11, 1 )
 			AddCinematicMessage( 12, 1 )
 
+			TActivate("trLeaderCaravanDie_End")
+			TDeactivate("trLeaderCarDie")
+
 			trigger:Deactivate()
 		</script>
 	</trigger>
 
+	<trigger Name="trLeaderCaravanDie_End" active="0">
+		<event eventid="GE_END_CINEMATIC" ObjName="Player1" />
+		<event eventid="GE_SKIP_CINEMATIC" ObjName="Player1" />
+		<script>
+			RestoreAllToleranceStatus()
 
-<!-- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ -->
+			if getObj("LeaderCar_vehicle_0") then
+				getObj("LeaderCar_vehicle_0"):Remove()
+			end
+
+			CompleteQuestIfTaken("FreeExtremistLeader_Quest3_1")
+			CompleteQuestIfTaken("FreeExtremistLeader_Quest3_2")
+
+			trigger:Deactivate()
+		</script>
+	</trigger>
+
+<!-- Машина с лидером померла -->
 	<trigger Name="trLeaderCarDie" active="0">
 		<!--event eventid="GE_OBJECT_DIE" ObjName="LeaderCar" /-->
 		<script>
 --		    println("trLeaderCar DIEEEEEEEEEEEEEEEEEEEE")
-			FailQuestIfTaken("TRS_Quest3b")
-			FailQuestIfTaken("FreeExtremistLeader_Quest3")
-			FailQuestIfTaken("FreeExtremistLeader_Quest1")
-			TakeQuest("KillExtremist_Quest1")
+			
+			SaveAllToleranceStatus(RS_NEUTRAL)
 
 			local Plf = GetPlayerVehicle()
 			local PlfID = GetPlayerVehicleId()
@@ -244,12 +279,39 @@
 			Plf:SetThrottle( 0 )
 			Plf:SetCustomControlEnabled( false )
 
-			FlyAround(2, 0, 35, 25, PlfCoor, PlfID, 1, 1 )
+			FlyAround(2, 0, 35, 16, PlfCoor, PlfID, 1, 1 )
 			StartCinematic()
 
 			AddCinematicMessage( 13, 1 )
 			AddCinematicMessage( 14, 1 )
+
 			TDeactivate("trLeaderCaravanDie")
+			TActivate("trLeaderCarDie_End")
+
+			FailQuestIfTaken("TRS_Quest3b")
+			FailQuestIfTaken("FreeExtremistLeader_Quest1")
+			FailQuestIfTaken("FreeExtremistLeader_Quest3_1")
+			FailQuestIfTaken("FreeExtremistLeader_Quest3_2")
+
+			trigger:Deactivate()
+		</script>
+	</trigger>
+
+	<trigger Name="trLeaderCarDie_End" active="0">
+	<event eventid="GE_END_CINEMATIC" ObjName="Player1" />
+	<event eventid="GE_SKIP_CINEMATIC" ObjName="Player1" />
+		<script>
+			RestoreAllToleranceStatus()
+
+			for i = 0,2 do
+				if GetEntityByName("LeaderGuardTeam_vehicle_"..i) then GetEntityByName("LeaderGuardTeam_vehicle_"..i):Remove() end
+			end
+
+			local LeadCar = GetEntityByName("LeaderCar_vehicle_0")
+			if LeadCar then LeadCar:Remove() end
+		
+			TakeQuest("TRS_Quest3a")
+
 			trigger:Deactivate()
 		</script>
 	</trigger>
@@ -257,19 +319,33 @@
 	<trigger	Name="trExtrTeamMustDie_Take" active="0">
 		<event	timeout="0.01"	eventid="GE_TIME_PERIOD" />
 		<script>
+			TDeactivate("trNearCaravanLeader")
+			TDeactivate("trLeaderCaravanDie")
+			TDeactivate("trLeaderCarDie")
+			
 			TeamCreate("ExtrGuardTeam",1065,CVector(getPos("StorageVil_deploy")),{"Revolutioner1","Revolutioner2","Bug01","Bug01","Revolutioner2"})			
 			SetTolerance(1100, 1065, RS_ENEMY)
 			if  RS_NEUTRAL>GetTolerance(1100, 1010) then
 				SetTolerance(1100, 1010, RS_NEUTRAL)
 			end
+
+			for i = 0,2 do
+				if GetEntityByName("LeaderGuardTeam_vehicle_"..i) then GetEntityByName("LeaderGuardTeam_vehicle_"..i):Remove() end
+			end
+
+			local LeadCar = GetEntityByName("LeaderCar_vehicle_0")
+			if LeadCar then LeadCar:Remove() end
+
 			FailQuestIfTaken("TRS_Quest3b")
 			FailQuestIfTaken("FreeExtremistLeader_Quest3")
+			CompleteQuest("TRS_Quest3a")
+			TakeQuest('KillExtremist_Quest1')
 			TActivate("trExtrGuardTeamDie")
 			trigger:Deactivate()
 		</script>
 	</trigger>
 
-<!-- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ -->
+<!-- Экстримисты померли -->
 	<trigger	Name="trExtrGuardTeamDie"	active="0">
 		<event	eventid="GE_OBJECT_DIE"		ObjName="ExtrGuardTeam" />
 		<script>
@@ -277,7 +353,7 @@
 			SaveAllToleranceStatus(RS_NEUTRAL)
 		    SetTolerance(1100, 1010, RS_NEUTRAL)
 			CompleteQuest("KillExtremist_Quest1")
-			CompleteQuest("TRS_Quest3a")
+			TakeQuest("TRS_Quest4")
 
 			local Plf = GetPlayerVehicle()
 			local PlfID = GetPlayerVehicleId()
@@ -290,7 +366,7 @@
 			Plf:SetThrottle( 0 )
 			Plf:SetCustomControlEnabled( false )
 
-			FlyAround(6, 0, 25, 25, PlfCoor, PlfID, 1, 1 )
+			FlyAround(6, 0, 25, 13, PlfCoor, PlfID, 1, 1 )
 			StartCinematic()
 
 			AddCinematicMessage( 21, 1 )
@@ -307,6 +383,7 @@
 		<event eventid="GE_SKIP_CINEMATIC" ObjName="Player1" />
 		<script>
 			RestoreAllToleranceStatus()
+			if getObj("StorageVil") then getObj("StorageVil"):SetBelong(1010) end
 			trigger:Deactivate()
 		</script>
 	</trigger>
@@ -315,22 +392,48 @@
 	<trigger Name="trConv" active="1">
 		<event	eventid="GE_OBJECT_ENTERS_LOCATION"	ObjName="ExitFromMap" />
 		<script>
---			trigger:Deactivate() 
-			GetPlayerVehicle():SetCustomLinearVelocity( 0 )
+			local Plf = GetPlayerVehicle()
+			Plf:SetThrottle( 0 )
+			Plf:SetCustomLinearVelocity( 0 )
+
+			local PlfID = GetPlayerVehicleId()
+			local PlfCoor = Plf:GetPosition()
+			PlfCoor.y = PlfCoor.y + 25*0.74
+			PlfCoor.z = PlfCoor.z + 25*0.74
+
 			local b = SpawnMessageBox( "8801" )
 
 			if b == 1 then
---				println ("Yes")
---				GetPlayerVehicle():SetCustomControlEnabled(1)
---				GetPlayerVehicle():SetExternalPathByName("ExitMapPath")
 				PassToMap("r1m3", "FromR1M4", -1 )
 			else
---				println ("No")
---				GetPlayerVehicle():SetCustomControlEnabled(1)
-				GetPlayerVehicle():SetExternalPathByName("ReturnPath")
+				SaveAllToleranceStatus(RS_NEUTRAL)
+
+				FlyAround(1, 0, 25, 6, PlfCoor, PlfID, 1, 1 )
+				StartCinematic()
+				Plf:SetExternalPathByName("ReturnPath")
+
+				TActivate("trConv_End")
 			end
---			GetPlayerVehicle():SetCustomControlEnabled(0)
  		</script>
+	</trigger>
+
+	<trigger Name="trConv_End" active="0">
+		<event eventid="GE_END_CINEMATIC" ObjName="Player1" />
+		<event eventid="GE_SKIP_CINEMATIC" ObjName="Player1" />
+		<script>
+			RestoreAllToleranceStatus()
+
+			SetCameraBehindPlayerVehicle()
+
+			Plf = GetPlayerVehicle()
+			if Plf then
+				Plf:PlaceToEndOfPath("ReturnPath")
+				Plf:SetGamePositionOnGround(CVector(2740.853, 228.788, 489.311))
+				Plf:SetRotation(Quaternion(-0.025, -0.193, 0.010, 0.981))
+			end
+
+			trigger:Deactivate()
+		</script>
 	</trigger>
 
 	<trigger	Name="trGateOpen" active="0">
@@ -475,72 +578,17 @@
 
 			local b = SpawnMessageBox( "8801" )
 			if b == 1 then
---				println ("Yes")
---				PassToMap("r3m2", "FromR3M1", 180 )
-				PlayCustomMusic("Bio02")
-				TActivate("cinMovePlToR3M1_Fade")
-				if vehPl then
-					TActivate("cinMovePlToR3M1_Fade")
-					getObj("SubmarinaR1M4"):StartMotionToPort()
-			   end
+--				PlayCustomMusic("Bio02")
+				TActivate("cinMovePlToR3M1_begin")
 			else
---				println ("No")
---				GetPlayerVehicle():SetExternalPathByName("ReturnPathR3M2")
+				local vehPlayer = GetPlayerVehicle()
+				if vehPlayer then
+					vehPlayer:SetCustomControlEnabled( true )
+					vehPlayer:SetCustomLinearVelocity( 0 )
+					vehPlayer:SetThrottle( 0 )
+					vehPlayer:SetCustomControlEnabled( false )
+				end
 			end
  		</script>
 	</trigger>
-
-	<trigger Name="cinMovePlToR3M1_Fade" active="0">
- 		<event eventid="GE_CINEMATIC_ENTER_FADE_IN" ObjName="Player1" />
-		<script>
-			local vehPl = GetPlayerVehicle()
-			if vehPl then
-				setPos(vehPl, CVector(715.683, 216.282, 763.979))
-				setRot(vehPl, Quaternion(0.000, 1.000, 0.006, -0.004))
-		   end
-		   trigger:Deactivate()
- 		</script>
-	</trigger>
-
-
-<!-- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ -->
-	<trigger Name="trFT" active="0">
-		<event	timeout="1"	eventid="GE_TIME_PERIOD" />
-		<script>
-			SaveAllToleranceStatus(RS_NEUTRAL)
-
-			PlayCustomMusic("IntenseDialogue03")
-			local Plf = GetPlayerVehicle()
-			local PlfID = GetPlayerVehicleId()
-			local PlfCoor = Plf:GetPosition()
-			PlfCoor.y = PlfCoor.y + 5
-			PlfCoor.z = PlfCoor.z + 40
-
-			Plf:SetCustomControlEnabled( true )
-			Plf:SetCustomLinearVelocity( 0 )
-			Plf:SetThrottle( 0 )
-			Plf:SetCustomControlEnabled( false )
-
-			FlyAround(1, 0.01, 40, 25, PlfCoor, PlfID, 1, 1 )
-			StartCinematic()
-
-			AddCinematicMessage( 10, 0.5 )
-			AddCinematicMessage( 11, 0.5 )
-			AddCinematicMessage( 12, 0.5 )
-
-			TActivate("trFTend")
-			trigger:Deactivate()
-		</script>
-	</trigger>
-
-	<trigger Name="trFTend" active="0">
-		<event eventid="GE_END_CINEMATIC" ObjName="Player1" />
-		<event eventid="GE_SKIP_CINEMATIC" ObjName="Player1" />
-		<script>
-			RestoreAllToleranceStatus()
-			StopPlayingCustomMusic()
-			trigger:Deactivate()
-		</script>
-	</trigger>
-
 </triggers>
