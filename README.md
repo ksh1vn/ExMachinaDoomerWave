@@ -11,3 +11,5 @@
 Выражаю благодарность за помощь во время разработки сообществу **Deus Ex Machina**, а так-же **Carsen'у**.
 
 Титры в конце игры позаимствованы из **Improved Storyline** (https://github.com/zatinu322/ImprovedStoryline/releases/tag/v.1.0.5.3) **с разрешения автора**.
+
+Скачать версию для **Community Remaster**: https://github.com/ksh1vn/ExMachinaDoomerWave/releases/tag/DWCR1.0
